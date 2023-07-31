@@ -45,8 +45,6 @@ elif percentage == 0:
 else:
     stock_change = f"GOOGL: 🔻{percentage}%"
 
-percentage = -5
-
 # When STOCK price increase/decreases by 5% between yesterday and the day before yesterday then print("Get News").
 if percentage >= 5 or percentage <= -5:
     news_parameters = {
