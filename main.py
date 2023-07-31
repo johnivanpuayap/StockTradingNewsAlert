@@ -1,12 +1,12 @@
 import os
 from datetime import datetime, timedelta
-
 import requests
 
 # DATA
 STOCK = "GOOGL"
 COMPANY_NAME = "Alphabet Inc Class A"
 ALPHA_VANTAGE_API_KEY = os.environ['ALPHA_VANTAGE_API_KEY']
+NEWS_API_KEY = os.environ['NEWS_API_KEY']
 
 stock_parameters = {
     'function': 'TIME_SERIES_DAILY',
@@ -39,12 +39,19 @@ elif percentage == 0:
 else:
     print(f"GOOGL: 🔻{percentage}%")
 
-# When STOCK price increase/decreases by 5% between yesterday and the day before yesterday then print("Get News").
-if -5 > percentage > 5:
-    print("Get News")
+percentage = -5
 
-## STEP 2: Use https://newsapi.org
-# Instead of printing ("Get News"), actually get the first 3 news pieces for the COMPANY_NAME.
+# When STOCK price increase/decreases by 5% between yesterday and the day before yesterday then print("Get News").
+if percentage >= 5 or percentage <= -5:
+    news_parameters = {
+        'q': "google",
+        'apiKey': NEWS_API_KEY,
+        'from': day_before_yesterday,
+        'to': yesterday,
+    }
+    news_response = requests.get(url='https://newsapi.org/v2/everything', params=news_parameters)
+    print(news_response.json()['articles'][:3])
+
 
 ## STEP 3: Use https://www.twilio.com
 # Send a seperate message with the percentage change and each article's title and description to your phone number.
