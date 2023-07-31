@@ -12,6 +12,7 @@ TWILIO_ACCOUNT_SID = os.environ['TWILIO_ACCOUNT_SID']
 TWILIO_AUTH_TOKEN = os.environ['TWILIO_AUTH_TOKEN']
 TWILIO_PHONE_NUMBER = '+14706135180'
 MY_PHONE_NUMBER = '+639561886073'
+articles = []
 
 stock_parameters = {
     'function': 'TIME_SERIES_DAILY',
@@ -39,13 +40,10 @@ percentage = round(difference / day_before_yesterday_closing * 100, 3)
 
 if percentage > 0:
     stock_change = f"GOOGL: 🔺{percentage}%"
-    print(f"GOOGL: 🔺{percentage}%")
 elif percentage == 0:
     stock_change = f"GOOGL: 0%"
-    print(f"GOOGLE: 0%")
 else:
     stock_change = f"GOOGL: 🔻{percentage}%"
-    print(f"GOOGL: 🔻{percentage}%")
 
 percentage = -5
 
@@ -66,21 +64,11 @@ client = Client(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN)
 for article in articles:
     body = f"{stock_change}\n" \
            f"Headline: {article['title']}\n" \
-           f"Brief: {article['description']}"
+           f"Brief: {article['description']}\n"
+
     message = client.messages.create(
         body=body,
         from_=TWILIO_PHONE_NUMBER,
         to=MY_PHONE_NUMBER
     )
     print(message.sid)
-
-# Optional: Format the SMS message like this:
-"""
-TSLA: 🔺2%
-Headline: Were Hedge Funds Right About Piling Into Tesla Inc. (TSLA)?. 
-Brief: We at Insider Monkey have gone over 821 13F filings that hedge funds and prominent investors are required to file by the SEC The 13F filings show the funds' and investors' portfolio positions as of March 31st, near the height of the coronavirus market crash.
-or
-"TSLA: 🔻5%
-Headline: Were Hedge Funds Right About Piling Into Tesla Inc. (TSLA)?. 
-Brief: We at Insider Monkey have gone over 821 13F filings that hedge funds and prominent investors are required to file by the SEC The 13F filings show the funds' and investors' portfolio positions as of March 31st, near the height of the coronavirus market crash.
-"""
